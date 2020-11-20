@@ -1,0 +1,13 @@
+{
+	"compilerOptions": {
+		"alwaysStrict": true,
+		"esModuleInterop": true,
+		"jsx": "react",
+		"module": "CommonJS",
+		"moduleResolution": "node",
+		"outDir": "dist",
+		"target": "ES6"
+	},
+	"include": [ "src/**/*" ],
+	"exclude": [ "src/**/*.spec.ts" ]
+}
