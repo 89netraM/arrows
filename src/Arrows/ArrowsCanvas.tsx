@@ -1,5 +1,5 @@
 import React, { Component, ReactNode, RefObject } from "react";
-import { Mesh, MeshToonMaterial, PerspectiveCamera, Renderer, SphereGeometry, Vector3, WebGLRenderer } from "three";
+import { MeshToonMaterial, PerspectiveCamera, Renderer, Vector3, WebGLRenderer } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { ArrowsProperties } from "./ArrowsProperties";
 import { ArrowObject } from "./Three.js/ArrowObject";
@@ -15,7 +15,7 @@ export class ArrowsCanvas extends Component<ArrowsProperties, {}> {
 	private perspectiveCamera: PerspectiveCamera;
 	private size: DOMRect;
 	private controls: OrbitControls;
-	private scene: BaseScene;
+	private scene: BaseScene<any>;
 
 	public constructor(props: ArrowsProperties) {
 		super(props);
@@ -37,9 +37,9 @@ export class ArrowsCanvas extends Component<ArrowsProperties, {}> {
 		this.controls.maxDistance = 100;
 		this.controls.screenSpacePanning = true;
 
-		this.scene = new (class extends BaseScene {
-			public constructor() {
-				super();
+		this.scene = new (class extends BaseScene<ArrowsProperties> {
+			public constructor(props: ArrowsProperties) {
+				super(props);
 
 				const x = new ArrowObject(VectorObject.xHeadMaterial, VectorObject.xHeadMaterial, 1.05);
 				x.rotateX(Math.PI / 2);
@@ -66,10 +66,7 @@ export class ArrowsCanvas extends Component<ArrowsProperties, {}> {
 				M.z = r.x * F.y - r.y * F.x;
 				this.add(M);
 			}
-		})();
-		if (this.props.isOn) {
-			this.scene.showGrid();
-		}
+		})(this.props);
 
 		this.requestAnimationFrame();
 	}
@@ -96,15 +93,8 @@ export class ArrowsCanvas extends Component<ArrowsProperties, {}> {
 		this.animationFrameRequest = window.requestAnimationFrame(this.updateThreeJs.bind(this));
 	}
 
-	public componentDidUpdate(prevProps: Readonly<ArrowsProperties>): void {
-		if (prevProps.isOn !== this.props.isOn) {
-			if (this.props.isOn) {
-				this.scene.showGrid();
-			}
-			else {
-				this.scene.hideGrid();
-			}
-		}
+	public componentDidUpdate(): void {
+		this.scene.updateProperties(this.props);
 	}
 
 	public componentWillUnmount(): void {

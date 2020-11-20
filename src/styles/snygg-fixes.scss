@@ -1,0 +1,8 @@
+.radio {
+	margin-left: 1ch;
+	margin-right: 0.5ch;
+
+	label:first-of-type > & {
+		margin-left: 0px;
+	}
+}

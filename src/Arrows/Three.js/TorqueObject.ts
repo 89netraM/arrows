@@ -1,8 +1,9 @@
 import { Vector3, Material, Object3D } from "three";
 import { VectorObject } from "./VectorObject";
 import { ArrowObject } from "./ArrowObject";
+import { IVectorSegments } from "./IVectorSegments";
 
-export class TorqueObject extends Object3D {
+export class TorqueObject extends Object3D implements IVectorSegments {
 	public static get headInArrow(): number {
 		return ArrowObject.arrowRadius / (ArrowObject.headRadius / ArrowObject.headLength);
 	}
@@ -40,6 +41,14 @@ export class TorqueObject extends Object3D {
 		this.updateVectors();
 	}
 
+	public get shouldShowSegments(): boolean {
+		return this.Vector.shouldShowSegments;
+	}
+	public set shouldShowSegments(value: boolean) {
+		this.Vector.shouldShowSegments = value;
+		this.updateVectors();
+	}
+
 	protected readonly Vector: VectorObject;
 	protected readonly xVector: ArrowObject;
 	protected readonly yVector: ArrowObject;
@@ -71,13 +80,16 @@ export class TorqueObject extends Object3D {
 		this.xVector.length = this.Vector.x - TorqueObject.difference * (this.Vector.x / Math.abs(this.Vector.x));
 		this.xVector.position.z = this.tails ? this.Vector.z : 0.0;
 		this.xVector.rotation.z = -Math.PI / 2.0;
+		this.xVector.visible = this.shouldShowSegments;
 
 		this.yVector.length = this.Vector.y - TorqueObject.difference * (this.Vector.y / Math.abs(this.Vector.y));
 		this.yVector.position.x = this.tails ? this.Vector.x : 0.0;
 		this.yVector.position.z = this.tails ? this.Vector.z : 0.0;
+		this.yVector.visible = this.shouldShowSegments;
 
 		this.zVector.length = this.Vector.z - TorqueObject.difference * (this.Vector.z / Math.abs(this.Vector.z));
 		this.zVector.rotation.x = Math.PI / 2.0;
+		this.zVector.visible = this.shouldShowSegments;
 
 		const v = new Vector3(this.Vector.x, this.Vector.y, this.Vector.z);
 		this.aVector.length = v.length() - TorqueObject.difference;

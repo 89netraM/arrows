@@ -1,7 +1,8 @@
 import { Object3D, Vector3, Material, MeshToonMaterial } from "three";
 import { ArrowObject } from "./ArrowObject";
+import { IVectorSegments } from "./IVectorSegments";
 
-export class VectorObject extends Object3D {
+export class VectorObject extends Object3D implements IVectorSegments {
 	//#region Static helpers
 	public static readonly baseMaterial: Material = new MeshToonMaterial({ color: 0x7F7F7F });
 	public static readonly xHeadMaterial: Material = new MeshToonMaterial({ color: 0xFF0000 });
@@ -63,6 +64,15 @@ export class VectorObject extends Object3D {
 		this.updateVectors();
 	}
 
+	protected _shouldShowSegments: boolean = true;
+	public get shouldShowSegments(): boolean {
+		return this._shouldShowSegments;
+	}
+	public set shouldShowSegments(value: boolean) {
+		this._shouldShowSegments = value;
+		this.updateVectors();
+	}
+
 	protected readonly xVector: ArrowObject;
 	protected readonly yVector: ArrowObject;
 	protected readonly zVector: ArrowObject;
@@ -95,13 +105,16 @@ export class VectorObject extends Object3D {
 		this.xVector.length = this.vector.x;
 		this.xVector.position.z = this.tails ? this.vector.z : 0.0;
 		this.xVector.rotation.z = -Math.PI / 2.0;
+		this.xVector.visible = this.shouldShowSegments;
 
 		this.yVector.length = this.vector.y;
 		this.yVector.position.x = this.tails ? this.vector.x : 0.0;
 		this.yVector.position.z = this.tails ? this.vector.z : 0.0;
+		this.yVector.visible = this.shouldShowSegments;
 
 		this.zVector.length = this.vector.z;
 		this.zVector.rotation.x = Math.PI / 2.0;
+		this.zVector.visible = this.shouldShowSegments;
 
 		this.aVector.length = this.vector.length();
 		this.aVector.lookAt(this.position.clone().add(this.vector));

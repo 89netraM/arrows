@@ -1,6 +1,10 @@
 export interface ArrowsProperties {
-	isOn: boolean;
+	shouldShowGrid: boolean;
+	shouldShowTails: boolean;
+	shouldShowSegments: boolean;
 }
 export const defaultArrowsProperties: ArrowsProperties = {
-	isOn: true,
+	shouldShowGrid: true,
+	shouldShowTails: false,
+	shouldShowSegments: true,
 };

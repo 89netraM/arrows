@@ -21,11 +21,53 @@ export class ArrowsSettings extends Component<ArrowsSettingsProperties, {}> {
 			<>
 				<p>
 					<label>
-						<span>Is on: </span>
+						<span>Show vector segments: </span>
 						<input
 							type="checkbox"
-							checked={this.props.isOn}
-							onChange={() => this.onChange("isOn", !this.props.isOn)}
+							checked={this.props.shouldShowSegments}
+							onChange={() => this.onChange("shouldShowSegments", !this.props.shouldShowSegments)}
+						/>
+						<span className="toggle"></span>
+					</label>
+				</p>
+				{
+					(() => {
+						if (this.props.shouldShowSegments) {
+							return (
+								<p>
+									<span style={{ display: "block", marginBottom: "0.5em" }}>Vector segment display:</span>
+									<label>
+										<input
+											type="radio"
+											name="vectorSegmentMode"
+											checked={this.props.shouldShowTails}
+											onChange={() => this.onChange("shouldShowTails", !this.props.shouldShowTails)}
+										/>
+										<span className="radio"></span>
+										<span>Tails</span>
+									</label>
+									<label>
+										<input
+											type="radio"
+											name="vectorSegmentMode"
+											checked={!this.props.shouldShowTails}
+											onChange={() => this.onChange("shouldShowTails", !this.props.shouldShowTails)}
+										/>
+										<span className="radio"></span>
+										<span>Split</span>
+									</label>
+								</p>
+							);
+						}
+					})()
+				}
+				<p>
+					<label>
+						<span>Grid: </span>
+						<input
+							type="checkbox"
+							checked={this.props.shouldShowGrid}
+							onChange={() => this.onChange("shouldShowGrid", !this.props.shouldShowGrid)}
 						/>
 						<span
 							className="toggle"
