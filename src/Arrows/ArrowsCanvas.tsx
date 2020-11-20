@@ -1,5 +1,5 @@
 import React, { Component, ReactNode, RefObject } from "react";
-import { MeshToonMaterial, PerspectiveCamera, Renderer, Vector3, WebGLRenderer } from "three";
+import { Camera, MeshToonMaterial, OrthographicCamera, PerspectiveCamera, Renderer, Vector3, WebGLRenderer } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { ArrowsProperties } from "./ArrowsProperties";
 import { ArrowObject } from "./Three.js/ArrowObject";
@@ -12,9 +12,12 @@ export class ArrowsCanvas extends Component<ArrowsProperties, {}> {
 
 	private animationFrameRequest: number;
 	private renderer: Renderer;
+	private camera: Camera;
 	private perspectiveCamera: PerspectiveCamera;
+	private orthographicCamera: OrthographicCamera;
 	private size: DOMRect;
-	private controls: OrbitControls;
+	private perspectiveControls: OrbitControls;
+	private orthographicControls: OrbitControls;
 	private scene: BaseScene<any>;
 
 	public constructor(props: ArrowsProperties) {
@@ -31,11 +34,11 @@ export class ArrowsCanvas extends Component<ArrowsProperties, {}> {
 
 		this.perspectiveCamera = new PerspectiveCamera(75, 1, 0.1, 1000);
 		this.perspectiveCamera.position.setZ(5);
-
-		this.controls = new OrbitControls(this.perspectiveCamera, this.renderer.domElement);
-		this.controls.minDistance = 3;
-		this.controls.maxDistance = 100;
-		this.controls.screenSpacePanning = true;
+		this.perspectiveControls = this.createControlsFor(this.perspectiveCamera);
+		this.orthographicCamera = new OrthographicCamera(-5, 5, 5, -5, -1000, 1000);
+		this.orthographicCamera.position.setZ(5);
+		this.orthographicControls = this.createControlsFor(this.orthographicCamera);
+		this.setCamera();
 
 		this.scene = new (class extends BaseScene<ArrowsProperties> {
 			public constructor(props: ArrowsProperties) {
@@ -70,12 +73,20 @@ export class ArrowsCanvas extends Component<ArrowsProperties, {}> {
 
 		this.requestAnimationFrame();
 	}
+	private createControlsFor(camera: Camera): OrbitControls {
+		const controls = new OrbitControls(camera, this.renderer.domElement);
+		controls.minDistance = 3;
+		controls.maxDistance = 100;
+		controls.screenSpacePanning = true;
+		return controls;
+	}
 
 	private updateThreeJs(): void {
-		this.controls.update();
+		this.perspectiveControls.update();
+		this.orthographicControls.update();
 
 		this.updateSize();
-		this.renderer.render(this.scene, this.perspectiveCamera);
+		this.renderer.render(this.scene, this.camera);
 
 		this.requestAnimationFrame();
 	}
@@ -93,8 +104,21 @@ export class ArrowsCanvas extends Component<ArrowsProperties, {}> {
 		this.animationFrameRequest = window.requestAnimationFrame(this.updateThreeJs.bind(this));
 	}
 
-	public componentDidUpdate(): void {
+	public componentDidUpdate(prevProps: Readonly<ArrowsProperties>): void {
 		this.scene.updateProperties(this.props);
+
+		if (prevProps.cameraMode !== this.props.cameraMode) {
+			this.setCamera();
+		}
+	}
+
+	private setCamera(): void {
+		if (this.props.cameraMode === "perspective") {
+			this.camera = this.perspectiveCamera;
+		}
+		else {
+			this.camera = this.orthographicCamera;
+		}
 	}
 
 	public componentWillUnmount(): void {

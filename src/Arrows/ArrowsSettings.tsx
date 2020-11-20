@@ -20,6 +20,37 @@ export class ArrowsSettings extends Component<ArrowsSettingsProperties, {}> {
 		return (
 			<>
 				<p>
+					<span style={{ display: "block", marginBottom: "0.5em" }}>Camera mode:</span>
+					<label>
+						<input
+							type="radio"
+							name="cameraMode"
+							checked={this.props.cameraMode === "perspective"}
+							onChange={e => {
+								if (e.target.checked) {
+									this.onChange("cameraMode", "perspective")
+								}
+							}}
+						/>
+						<span className="radio"></span>
+						<span>Perspective</span>
+					</label>
+					<label>
+						<input
+							type="radio"
+							name="cameraMode"
+							checked={this.props.cameraMode === "orthographic"}
+							onChange={e => {
+								if (e.target.checked) {
+									this.onChange("cameraMode", "orthographic")
+								}
+							}}
+						/>
+						<span className="radio"></span>
+						<span>Orthographic</span>
+					</label>
+				</p>
+				<p>
 					<label>
 						<span>Show vector segments: </span>
 						<input
