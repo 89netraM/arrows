@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from "react";
+import React, { Component, ReactNode, RefObject } from "react";
 import { ArrowsCanvas } from "./Arrows/ArrowsCanvas";
 import { ArrowsProperties, defaultArrowsProperties } from "./Arrows/ArrowsProperties";
 import { ArrowsSettings } from "./Arrows/ArrowsSettings";
@@ -35,6 +35,8 @@ export class App extends Component<{}, AppState> {
 	}
 
 	public render(): ReactNode {
+		const canvasRef = React.createRef<ArrowsCanvas>();
+
 		return (
 			<>
 				<header>
@@ -48,11 +50,15 @@ export class App extends Component<{}, AppState> {
 				<nav className={`${this.state.isNavOpen ? "visible" : ""}`}>
 					<ArrowsSettings
 						onChange={this.arrowPropsChange.bind(this)}
+						onResetView={() => canvasRef.current?.resetView()}
 						{...this.state.arrowsProps}
 					/>
 				</nav>
 				<main>
-					<ArrowsCanvas {...this.state.arrowsProps}/>
+					<ArrowsCanvas
+						ref={canvasRef}
+						{...this.state.arrowsProps}
+					/>
 				</main>
 			</>
 		);

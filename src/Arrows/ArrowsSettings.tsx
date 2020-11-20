@@ -3,6 +3,7 @@ import { ArrowsProperties } from "./ArrowsProperties";
 
 export interface ArrowsSettingsProperties extends ArrowsProperties {
 	onChange: (changed: Partial<ArrowsProperties>) => void;
+	onResetView: () => void;
 }
 
 export class ArrowsSettings extends Component<ArrowsSettingsProperties, {}> {
@@ -16,9 +17,20 @@ export class ArrowsSettings extends Component<ArrowsSettingsProperties, {}> {
 		});
 	}
 
+	private onResetView(): void {
+		this.props.onResetView();
+	}
+
 	public render(): ReactNode {
 		return (
 			<>
+				{ this.props.sceneSettings }
+				<hr/>
+				<p>
+					<button onClick={this.onResetView.bind(this)}>
+						Reset View
+					</button>
+				</p>
 				<p>
 					<span style={{ display: "block", marginBottom: "0.5em" }}>Camera mode:</span>
 					<label>

@@ -121,6 +121,11 @@ export class ArrowsCanvas extends Component<ArrowsProperties, {}> {
 		}
 	}
 
+	public resetView(): void {
+		this.perspectiveControls.reset();
+		this.orthographicControls.reset();
+	}
+
 	public componentWillUnmount(): void {
 		if (this.animationFrameRequest != null) {
 			window.cancelAnimationFrame(this.animationFrameRequest);
