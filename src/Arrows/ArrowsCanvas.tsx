@@ -1,8 +1,8 @@
 import React, { Component, ReactNode, RefObject } from "react";
-import { PerspectiveCamera, Renderer, WebGLRenderer } from "three";
+import { Mesh, MeshToonMaterial, PerspectiveCamera, Renderer, SphereGeometry, WebGLRenderer } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { ArrowsProperties } from "./ArrowsProperties";
-import { MainScene } from "./Three.js/MainScene";
+import { BaseScene } from "./Three.js/BaseScene";
 
 export class ArrowsCanvas extends Component<ArrowsProperties, {}> {
 	private canvas: RefObject<HTMLCanvasElement> = React.createRef<HTMLCanvasElement>();
@@ -12,7 +12,7 @@ export class ArrowsCanvas extends Component<ArrowsProperties, {}> {
 	private perspectiveCamera: PerspectiveCamera;
 	private size: DOMRect;
 	private controls: OrbitControls;
-	private scene: MainScene;
+	private scene: BaseScene;
 
 	public constructor(props: ArrowsProperties) {
 		super(props);
@@ -27,15 +27,20 @@ export class ArrowsCanvas extends Component<ArrowsProperties, {}> {
 		});
 
 		this.perspectiveCamera = new PerspectiveCamera(75, 1, 0.1, 1000);
+		this.perspectiveCamera.position.setZ(5);
 
 		this.controls = new OrbitControls(this.perspectiveCamera, this.renderer.domElement);
 		this.controls.minDistance = 3;
 		this.controls.maxDistance = 100;
 		this.controls.screenSpacePanning = true;
 
-		this.scene = new MainScene();
+		this.scene = new BaseScene();
+		const ballGeometry = new SphereGeometry(0.5);
+		const ballMaterial = new MeshToonMaterial({ color: 0xBADA55 });
+		const ball = new Mesh(ballGeometry, ballMaterial);
+		this.scene.add(ball);
 		if (this.props.isOn) {
-			this.scene.showBall();
+			this.scene.showGrid();
 		}
 
 		this.requestAnimationFrame();
@@ -66,10 +71,10 @@ export class ArrowsCanvas extends Component<ArrowsProperties, {}> {
 	public componentDidUpdate(prevProps: Readonly<ArrowsProperties>): void {
 		if (prevProps.isOn !== this.props.isOn) {
 			if (this.props.isOn) {
-				this.scene.showBall();
+				this.scene.showGrid();
 			}
 			else {
-				this.scene.hideBall();
+				this.scene.hideGrid();
 			}
 		}
 	}
