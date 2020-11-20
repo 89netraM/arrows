@@ -1,0 +1,17 @@
+@import "@89netram/snygg/src/vars";
+
+$wideNavSize: clamp(#{$navSize}, calc(100vw - (100vh - #{$headerSize})), #{$navSize * 1.5});
+$mainSize: calc(100vw - #{$wideNavSize});
+
+@media (min-width: $bigScreen) {
+	nav {
+		width: $wideNavSize;
+		padding-left: $distance;
+	}
+
+	main {
+		width: $mainSize;
+		height: calc(100vh - #{$headerSize});
+		margin-left: $wideNavSize;
+	}
+}
