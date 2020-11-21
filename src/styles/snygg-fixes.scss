@@ -1,8 +1,12 @@
 .radio {
-	margin-left: 1ch;
-	margin-right: 0.5ch;
+	margin-top: 0.5rem;
 
-	label:first-of-type > & {
-		margin-left: 0px;
+	& + span {
+		margin-left: 0.5ch;
+		margin-right: 1ch;
+
+		label:last-of-type > & {
+			margin-right: 0px;
+		}
 	}
 }

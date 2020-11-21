@@ -33,7 +33,7 @@ export class ArrowsSettings extends Component<ArrowsSettingsProperties, {}> {
 					</button>
 				</p>
 				<p>
-					<span style={{ display: "block", marginBottom: "0.5em" }}>Camera mode:</span>
+					<span style={{ display: "block" }}>Camera mode:</span>
 					<label>
 						<input
 							type="radio"
@@ -79,7 +79,7 @@ export class ArrowsSettings extends Component<ArrowsSettingsProperties, {}> {
 						if (this.props.shouldShowSegments) {
 							return (
 								<p>
-									<span style={{ display: "block", marginBottom: "0.5em" }}>Vector segment display:</span>
+									<span style={{ display: "block" }}>Vector segment display:</span>
 									<label>
 										<input
 											type="radio"
