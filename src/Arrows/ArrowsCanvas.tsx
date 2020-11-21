@@ -1,13 +1,14 @@
 import React, { Component, ReactNode, RefObject } from "react";
-import { Camera, MeshToonMaterial, OrthographicCamera, PerspectiveCamera, Renderer, Vector3, WebGLRenderer } from "three";
+import { Camera, OrthographicCamera, PerspectiveCamera, Renderer, WebGLRenderer } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { ArrowsProperties } from "./ArrowsProperties";
-import { ArrowObject } from "./Three.js/ArrowObject";
 import { BaseScene } from "./Three.js/BaseScene";
-import { TorqueObject } from "./Three.js/TorqueObject";
-import { VectorObject } from "./Three.js/VectorObject";
 
-export class ArrowsCanvas extends Component<ArrowsProperties, {}> {
+export interface ArrowsCanvasProperties extends ArrowsProperties {
+	scene: BaseScene<any>;
+}
+
+export class ArrowsCanvas extends Component<ArrowsCanvasProperties, {}> {
 	private canvas: RefObject<HTMLCanvasElement> = React.createRef<HTMLCanvasElement>();
 
 	private animationFrameRequest: number;
@@ -18,9 +19,8 @@ export class ArrowsCanvas extends Component<ArrowsProperties, {}> {
 	private size: DOMRect;
 	private perspectiveControls: OrbitControls;
 	private orthographicControls: OrbitControls;
-	private scene: BaseScene<any>;
 
-	public constructor(props: ArrowsProperties) {
+	public constructor(props: ArrowsCanvasProperties) {
 		super(props);
 	}
 
@@ -40,37 +40,6 @@ export class ArrowsCanvas extends Component<ArrowsProperties, {}> {
 		this.orthographicControls = this.createControlsFor(this.orthographicCamera);
 		this.setCamera();
 
-		this.scene = new (class extends BaseScene<ArrowsProperties> {
-			public constructor(props: ArrowsProperties) {
-				super(props);
-
-				const x = new ArrowObject(VectorObject.xHeadMaterial, VectorObject.xHeadMaterial, 1.05);
-				x.rotateX(Math.PI / 2);
-				this.add(x);
-
-				const y = new ArrowObject(VectorObject.yHeadMaterial, VectorObject.yHeadMaterial, 1.05);
-				y.rotateZ(-Math.PI / 2);
-				this.add(y);
-
-				const z = new ArrowObject(VectorObject.zHeadMaterial, VectorObject.zHeadMaterial, 1.05);
-				this.add(z);
-
-				const r = new VectorObject(new Vector3(2, 3, -1.5), VectorObject.baseMaterial);
-				this.add(r);
-
-				const F = new VectorObject(new Vector3(-1, -4, 2.5), new MeshToonMaterial({ color: 0x8F45C7 }));
-				F.position.set(r.x, r.y, r.z);
-				this.add(F);
-
-				const M = new TorqueObject(new Vector3(0.0, 0.0, 0.0), new MeshToonMaterial({ color: 0xFFD966 }));
-				M.position.set(r.position.x, r.position.y, r.position.z);
-				M.x = r.y * F.z - r.z * F.y;
-				M.y = r.z * F.x - r.x * F.z;
-				M.z = r.x * F.y - r.y * F.x;
-				this.add(M);
-			}
-		})(this.props);
-
 		this.requestAnimationFrame();
 	}
 	private createControlsFor(camera: Camera): OrbitControls {
@@ -86,7 +55,7 @@ export class ArrowsCanvas extends Component<ArrowsProperties, {}> {
 		this.orthographicControls.update();
 
 		this.updateSize();
-		this.renderer.render(this.scene, this.camera);
+		this.renderer.render(this.props.scene, this.camera);
 
 		this.requestAnimationFrame();
 	}
@@ -104,8 +73,8 @@ export class ArrowsCanvas extends Component<ArrowsProperties, {}> {
 		this.animationFrameRequest = window.requestAnimationFrame(this.updateThreeJs.bind(this));
 	}
 
-	public componentDidUpdate(prevProps: Readonly<ArrowsProperties>): void {
-		this.scene.updateProperties(this.props);
+	public componentDidUpdate(prevProps: Readonly<ArrowsCanvasProperties>): void {
+		this.props.scene.updateProperties(this.props);
 
 		if (prevProps.cameraMode !== this.props.cameraMode) {
 			this.setCamera();

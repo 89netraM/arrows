@@ -16,3 +16,22 @@ main {
 		bottom: 0px;
 	}
 }
+
+.vector {
+	width: 100%;
+
+	label {
+		display: flex;
+
+		span {
+			min-width: 2ch;
+			text-align: end;
+		}
+
+		input {
+			max-width: 20ch;
+			display: inline;
+			margin-left: 1ch;
+		}
+	}
+}

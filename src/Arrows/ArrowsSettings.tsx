@@ -2,6 +2,7 @@ import React, { Component, ReactNode } from "react";
 import { ArrowsProperties } from "./ArrowsProperties";
 
 export interface ArrowsSettingsProperties extends ArrowsProperties {
+	sceneSettings: ReactNode;
 	onChange: (changed: Partial<ArrowsProperties>) => void;
 	onResetView: () => void;
 }

@@ -3,6 +3,10 @@
 $wideNavSize: clamp(#{$navSize}, calc(100vw - (100vh - #{$headerSize})), #{$navSize * 1.5});
 $mainSize: calc(100vw - #{$wideNavSize});
 
+nav {
+	padding: 0px $distance / 2;
+}
+
 main {
 	height: calc(100vh - #{$headerSize});
 }
@@ -11,6 +15,10 @@ main {
 	nav {
 		width: $wideNavSize;
 		padding-left: $distance;
+
+		hr {
+			margin-left: -$distance;
+		}
 	}
 
 	main {

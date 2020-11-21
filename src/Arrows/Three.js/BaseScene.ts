@@ -2,8 +2,6 @@ import { DirectionalLight, Scene, Vector3 } from "three";
 import { ArrowsProperties } from "../ArrowsProperties";
 import { GridObject } from "./GridObject";
 import { isIVectorSegments } from "./IVectorSegments";
-import { TorqueObject } from "./TorqueObject";
-import { VectorObject } from "./VectorObject";
 
 export class BaseScene<TProperties extends ArrowsProperties> extends Scene {
 	private static readonly lightPositions: ReadonlyArray<Vector3> = new Array<Vector3>(
@@ -14,7 +12,7 @@ export class BaseScene<TProperties extends ArrowsProperties> extends Scene {
 
 	private readonly grid: GridObject;
 
-	private props: TProperties;
+	protected props: TProperties;
 
 	public constructor(props: TProperties) {
 		super();
@@ -53,19 +51,15 @@ export class BaseScene<TProperties extends ArrowsProperties> extends Scene {
 			}
 		}
 
-		if (this.props.shouldShowTails !== newProps.shouldShowTails) {
-			for (const child of this.children) {
-				if (isIVectorSegments(child)) {
-					child.tails = newProps.shouldShowTails;
-				}
+		for (const child of this.children) {
+			if (isIVectorSegments(child)) {
+				child.tails = newProps.shouldShowTails;
 			}
 		}
 
-		if (this.props.shouldShowSegments !== newProps.shouldShowSegments) {
-			for (const child of this.children) {
-				if (isIVectorSegments(child)) {
-					child.shouldShowSegments = newProps.shouldShowSegments;
-				}
+		for (const child of this.children) {
+			if (isIVectorSegments(child)) {
+				child.shouldShowSegments = newProps.shouldShowSegments;
 			}
 		}
 	}

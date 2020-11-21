@@ -1,22 +1,24 @@
-import React, { Component, ReactNode, RefObject } from "react";
+import React, { Component, ReactNode } from "react";
 import { ArrowsCanvas } from "./Arrows/ArrowsCanvas";
-import { ArrowsProperties, defaultArrowsProperties } from "./Arrows/ArrowsProperties";
+import { ArrowsProperties } from "./Arrows/ArrowsProperties";
 import { ArrowsSettings } from "./Arrows/ArrowsSettings";
+import { SceneAndSettings } from "./Arrows/Scenes/SceneAndSettings";
 
-export interface AppState {
-	isNavOpen: boolean;
-	arrowsProps: ArrowsProperties;
+export interface AppProperties<T extends ArrowsProperties> {
+	startingState: AppState<T>;
 }
-export const defaultAppState: AppState = {
-	isNavOpen: false,
-	arrowsProps: defaultArrowsProperties
-};
 
-export class App extends Component<{}, AppState> {
-	public constructor(props: {}) {
+export interface AppState<T extends ArrowsProperties> {
+	isNavOpen: boolean;
+	scene: SceneAndSettings<T>;
+	arrowsProps: T;
+}
+
+export class App<T extends ArrowsProperties> extends Component<AppProperties<T>, AppState<T>> {
+	public constructor(props: AppProperties<T>) {
 		super(props);
 
-		this.state = defaultAppState;
+		this.state = this.props.startingState;
 	}
 
 	private toggleNav(): void {
@@ -49,6 +51,10 @@ export class App extends Component<{}, AppState> {
 				</header>
 				<nav className={`${this.state.isNavOpen ? "visible" : ""}`}>
 					<ArrowsSettings
+						sceneSettings={this.state.scene.settings({
+							...this.state.arrowsProps,
+							onChange: this.arrowPropsChange.bind(this)
+						})}
 						onChange={this.arrowPropsChange.bind(this)}
 						onResetView={() => canvasRef.current?.resetView()}
 						{...this.state.arrowsProps}
@@ -57,6 +63,7 @@ export class App extends Component<{}, AppState> {
 				<main>
 					<ArrowsCanvas
 						ref={canvasRef}
+						scene={this.state.scene.scene(this.state.arrowsProps)}
 						{...this.state.arrowsProps}
 					/>
 				</main>
