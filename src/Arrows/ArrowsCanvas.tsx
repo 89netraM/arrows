@@ -9,6 +9,8 @@ export interface ArrowsCanvasProperties extends ArrowsProperties {
 }
 
 export class ArrowsCanvas extends Component<ArrowsCanvasProperties, {}> {
+	private static readonly orthographicSize: number = 3.25;
+
 	private canvas: RefObject<HTMLCanvasElement> = React.createRef<HTMLCanvasElement>();
 
 	private animationFrameRequest: number;
@@ -35,7 +37,14 @@ export class ArrowsCanvas extends Component<ArrowsCanvasProperties, {}> {
 		this.perspectiveCamera = new PerspectiveCamera(75, 1, 0.1, 1000);
 		this.perspectiveCamera.position.setZ(5);
 		this.perspectiveControls = this.createControlsFor(this.perspectiveCamera);
-		this.orthographicCamera = new OrthographicCamera(-5, 5, 5, -5, -1000, 1000);
+		this.orthographicCamera = new OrthographicCamera(
+			-ArrowsCanvas.orthographicSize,
+			ArrowsCanvas.orthographicSize,
+			ArrowsCanvas.orthographicSize,
+			-ArrowsCanvas.orthographicSize,
+			-1000,
+			1000
+		);
 		this.orthographicCamera.position.setZ(5);
 		this.orthographicControls = this.createControlsFor(this.orthographicCamera);
 		this.setCamera();
@@ -65,6 +74,9 @@ export class ArrowsCanvas extends Component<ArrowsCanvasProperties, {}> {
 			this.size = newSize;
 			this.perspectiveCamera.aspect = this.size.width / this.size.height;
 			this.perspectiveCamera.updateProjectionMatrix();
+			this.orthographicCamera.left = -(ArrowsCanvas.orthographicSize * this.size.width / this.size.height);
+			this.orthographicCamera.right = ArrowsCanvas.orthographicSize * this.size.width / this.size.height;
+			this.orthographicCamera.updateProjectionMatrix();
 			this.renderer.setSize(this.size.width, this.size.height);
 			this.renderer.domElement.removeAttribute("style");
 		}
