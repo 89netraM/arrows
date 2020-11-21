@@ -10,7 +10,7 @@
 		"start": "webpack serve"
 	},
 	"devDependencies": {
-		"@89netram/snygg": "github:89netram/snygg#v1.0.4",
+		"@89netram/snygg": "github:89netram/snygg#v1.0.5",
 		"@types/react": "^16.9.56",
 		"@types/react-dom": "^16.9.9",
 		"@types/three": "^0.103.2",

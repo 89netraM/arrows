@@ -36,13 +36,18 @@ interface VectorDimensionInputState {
 	text: string;
 }
 
+const precision = 100;
 class VectorDimensionInput extends Component<VectorDimensionInputProperties, VectorDimensionInputState> {
 	public constructor(props: VectorDimensionInputProperties) {
 		super(props);
 
 		this.state = {
-			text: this.props.length.toString()
+			text: this.prettify(this.props.length)
 		};
+	}
+
+	private prettify(value: number): string {
+		return (Math.round(value * precision) / precision).toString();
 	}
 
 	private updateText(newText: string): void {
@@ -63,7 +68,8 @@ class VectorDimensionInput extends Component<VectorDimensionInputProperties, Vec
 			<label className={`${!valid ? "error" : ""}`}>
 				<span style={{ color: this.props.color }}>{this.props.name}</span>:
 				<input
-					type="text"
+					type="number"
+					step={0.1}
 					value={this.state.text}
 					readOnly={this.props.onChange == null}
 					onChange={e => this.updateText(e.target.value)}
