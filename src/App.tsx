@@ -3,6 +3,7 @@ import { ArrowsCanvas } from "./Arrows/ArrowsCanvas";
 import { ArrowsProperties } from "./Arrows/ArrowsProperties";
 import { ArrowsSettings } from "./Arrows/ArrowsSettings";
 import { SceneAndSettings } from "./Arrows/Scenes/SceneAndSettings";
+import { BaseScene } from "./Arrows/Three.js/BaseScene";
 
 export interface AppProperties<T extends ArrowsProperties> {
 	startingState: AppState<T>;
@@ -15,6 +16,8 @@ export interface AppState<T extends ArrowsProperties> {
 }
 
 export class App<T extends ArrowsProperties> extends Component<AppProperties<T>, AppState<T>> {
+	private scene: [(p: T) => BaseScene<T>, BaseScene<T>] = [null, null];
+
 	public constructor(props: AppProperties<T>) {
 		super(props);
 
@@ -38,6 +41,13 @@ export class App<T extends ArrowsProperties> extends Component<AppProperties<T>,
 
 	public render(): ReactNode {
 		const canvasRef = React.createRef<ArrowsCanvas>();
+
+		if (this.scene[0] !== this.state.scene.scene) {
+			this.scene = [
+				this.state.scene.scene,
+				this.state.scene.scene(this.state.arrowsProps)
+			];
+		}
 
 		return (
 			<>
@@ -63,7 +73,7 @@ export class App<T extends ArrowsProperties> extends Component<AppProperties<T>,
 				<main>
 					<ArrowsCanvas
 						ref={canvasRef}
-						scene={this.state.scene.scene(this.state.arrowsProps)}
+						scene={this.scene[1]}
 						{...this.state.arrowsProps}
 					/>
 				</main>
