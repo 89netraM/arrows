@@ -16,7 +16,7 @@ export class ArrowObject extends Object3D {
 	private static calcHeadPosition(totalLength: number): number {
 		return (Math.abs(totalLength) - ArrowObject.headLength / 2.0) * ArrowObject.calcDirection(totalLength);
 	}
-	
+
 	public static readonly arrowRadius: number = 0.05;
 	private static calcArrowLength(totalLength: number): number {
 		return (Math.abs(totalLength) - ArrowObject.headLength) * ArrowObject.calcDirection(totalLength);
@@ -53,7 +53,7 @@ export class ArrowObject extends Object3D {
 
 	public constructor(headMaterial?: Material, arrowMaterial?: Material, radius: number = 1.0, length: number = 1.0, detail: number = 25) {
 		super();
-		
+
 		const headGeometry = new ConeGeometry(ArrowObject.headRadius * radius, ArrowObject.headLength * radius, detail);
 		if (headMaterial != null) {
 			this.headMesh = new Mesh(headGeometry, headMaterial);
@@ -62,7 +62,7 @@ export class ArrowObject extends Object3D {
 			this.headMesh = new Mesh(headGeometry, new MeshBasicMaterial({ color: 0x333333 }));
 		}
 		this.add(this.headMesh);
-		
+
 		const arrowGeometry = new CylinderGeometry(ArrowObject.arrowRadius * radius, ArrowObject.arrowRadius * radius, 1.0, detail);
 		if (arrowMaterial != null) {
 			this.arrowMesh = new Mesh(arrowGeometry, arrowMaterial);
@@ -71,16 +71,16 @@ export class ArrowObject extends Object3D {
 			this.arrowMesh = new Mesh(arrowGeometry, new MeshBasicMaterial({ color: 0x333333 }));
 		}
 		this.add(this.arrowMesh);
-		
+
 		this.length = length;
 	}
-	
+
 	private updateLength(): void {
 		if (Math.abs(this.length) < ArrowObject.headLength) {
-			this.visible = false;
+			this.arrowMesh.visible = this.headMesh.visible = false;
 		}
 		else {
-			this.visible = true;
+			this.arrowMesh.visible = this.headMesh.visible = true;
 			this.headMesh.scale.y = ArrowObject.calcDirection(this.length);
 			this.headMesh.position.y = ArrowObject.calcHeadPosition(this.length);
 			this.arrowMesh.scale.y = ArrowObject.calcArrowLength(this.length);
