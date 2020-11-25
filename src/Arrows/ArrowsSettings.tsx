@@ -65,6 +65,17 @@ export class ArrowsSettings extends Component<ArrowsSettingsProperties, {}> {
 				</p>
 				<p>
 					<label>
+						<span>Show vector labels: </span>
+						<input
+							type="checkbox"
+							checked={this.props.isLabelVisible}
+							onChange={() => this.onChange("isLabelVisible", !this.props.isLabelVisible)}
+						/>
+						<span className="toggle"></span>
+					</label>
+				</p>
+				<p>
+					<label>
 						<span>Show vector segments: </span>
 						<input
 							type="checkbox"

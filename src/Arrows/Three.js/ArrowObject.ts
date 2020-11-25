@@ -1,6 +1,20 @@
 import { Object3D, ConeGeometry, Material, Mesh, MeshBasicMaterial, CylinderGeometry } from "three";
+import { SpriteText2D, textAlign } from "three-text2d";
+import { ILabeled } from "./ILabeled";
 
-export class ArrowObject extends Object3D {
+export class ArrowObject extends Object3D implements ILabeled {
+	private static readonly fontSize: number = 80;
+	private static readonly labelScale: number = 0.3 / ArrowObject.fontSize;
+	private static getFont(): string {
+		return window.getComputedStyle(document.body)
+			.getPropertyValue("font")
+			.replace(/\d+px/, ArrowObject.fontSize + "px");
+	}
+	private static getFontColor(): string {
+		return window.getComputedStyle(document.body)
+			.getPropertyValue("--color");
+	}
+
 	//#region Static helpers
 	private static calcDirection(totalLength: number): number {
 		if (totalLength >= 0.0) {
@@ -51,6 +65,50 @@ export class ArrowObject extends Object3D {
 		this.updateLength();
 	}
 
+	private labelSprite: SpriteText2D = null;
+	private _label: string = "";
+	public get label(): string {
+		return this._label;
+	}
+	public set label(value: string) {
+		this._label = value;
+
+		if (this.labelSprite != null) {
+			this.remove(this.labelSprite);
+			this.labelSprite = null;
+		}
+
+		if (this.label != null && this.label !== "") {
+			this.labelSprite = new SpriteText2D(
+				this.label,
+				{
+					align: textAlign.topLeft,
+					font: ArrowObject.getFont(),
+					fillStyle: ArrowObject.getFontColor(),
+					antialias: true,
+				}
+			);
+			this.labelSprite.material.depthTest = false;
+			this.labelSprite.scale.set(ArrowObject.labelScale, ArrowObject.labelScale, ArrowObject.labelScale);
+			this.labelSprite.visible = this.isLabelVisible;
+			this.updateLabelPosition();
+			this.add(this.labelSprite);
+		}
+	}
+	private _labelVisible: boolean = true;
+	public get isLabelVisible(): boolean {
+		return this._labelVisible;
+	}
+	public set isLabelVisible(value: boolean) {
+		if (this._labelVisible !== value) {
+			this._labelVisible = value;
+
+			if (this.labelSprite != null) {
+				this.labelSprite.visible = value;
+			}
+		}
+	}
+
 	public constructor(headMaterial?: Material, arrowMaterial?: Material, radius: number = 1.0, length: number = 1.0, detail: number = 25) {
 		super();
 
@@ -81,10 +139,18 @@ export class ArrowObject extends Object3D {
 		}
 		else {
 			this.arrowMesh.visible = this.headMesh.visible = true;
-			this.headMesh.scale.y = ArrowObject.calcDirection(this.length);
-			this.headMesh.position.y = ArrowObject.calcHeadPosition(this.length);
-			this.arrowMesh.scale.y = ArrowObject.calcArrowLength(this.length);
-			this.arrowMesh.position.y = ArrowObject.calcArrowPosition(this.length);
+		}
+
+		this.headMesh.scale.y = ArrowObject.calcDirection(this.length);
+		this.headMesh.position.y = ArrowObject.calcHeadPosition(this.length);
+		this.arrowMesh.scale.y = ArrowObject.calcArrowLength(this.length);
+		this.arrowMesh.position.y = ArrowObject.calcArrowPosition(this.length);
+		this.updateLabelPosition();
+	}
+
+	private updateLabelPosition(): void {
+		if (this.labelSprite != null) {
+			this.labelSprite.position.y = this.headMesh.position.y + ArrowObject.headLength / 2;
 		}
 	}
 }

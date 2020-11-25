@@ -1,6 +1,7 @@
 import { DirectionalLight, Scene, Vector3 } from "three";
 import { ArrowsProperties } from "../ArrowsProperties";
 import { GridObject } from "./GridObject";
+import { isILabeled } from "./ILabeled";
 import { isIVectorSegments } from "./IVectorSegments";
 
 export class BaseScene<TProperties extends ArrowsProperties> extends Scene {
@@ -54,12 +55,11 @@ export class BaseScene<TProperties extends ArrowsProperties> extends Scene {
 		for (const child of this.children) {
 			if (isIVectorSegments(child)) {
 				child.tails = newProps.shouldShowTails;
-			}
-		}
-
-		for (const child of this.children) {
-			if (isIVectorSegments(child)) {
 				child.shouldShowSegments = newProps.shouldShowSegments;
+			}
+
+			if (isILabeled(child)) {
+				child.isLabelVisible = newProps.isLabelVisible;
 			}
 		}
 	}

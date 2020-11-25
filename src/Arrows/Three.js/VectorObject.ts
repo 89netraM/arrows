@@ -1,31 +1,42 @@
 import { Object3D, Vector3, Material, MeshToonMaterial } from "three";
 import { ArrowObject } from "./ArrowObject";
 import { IVectorSegments } from "./IVectorSegments";
+import { ILabeled } from "./ILabeled";
 
-export class VectorObject extends Object3D implements IVectorSegments {
+export class VectorObject extends Object3D implements IVectorSegments, ILabeled {
 	//#region Static helpers
 	public static readonly baseMaterial: Material = new MeshToonMaterial({ color: 0x7F7F7F });
 	public static readonly xHeadMaterial: Material = new MeshToonMaterial({ color: 0xFF0000 });
 	public static readonly yHeadMaterial: Material = new MeshToonMaterial({ color: 0x00FF00 });
 	public static readonly zHeadMaterial: Material = new MeshToonMaterial({ color: 0x0000FF });
 
-	private static typeChecker(a: Vector3 | number, b?: number | Material, c?: number, d?: Material): [Vector3, Material] {
+	private static typeChecker(a: Vector3 | number, b?: number | Material, c?: number | string, d?: Material, e?: string): [Vector3, Material, string] {
 		if (a instanceof Vector3) {
 			if (b != null && b instanceof Material) {
-				return [a, b];
+				if (c != null && typeof(c) === "string") {
+					return [a, b, c];
+				}
+				else {
+					return [a, b, ""];
+				}
 			}
 			else {
-				return [a, VectorObject.baseMaterial];
+				return [a, VectorObject.baseMaterial, ""];
 			}
 		}
-		else if (typeof a === "number" && typeof b === "number" && typeof b === "number") {
+		else if (typeof a === "number" && typeof b === "number" && typeof c === "number") {
 			const vector = new Vector3(a, b, c);
 
 			if (d != null && d instanceof Material) {
-				return [vector, d];
+				if (e != null && typeof(e) === "string") {
+					return [vector, d, e];
+				}
+				else {
+					return [vector, d, ""];
+				}
 			}
 			else {
-				return [vector, VectorObject.baseMaterial];
+				return [vector, VectorObject.baseMaterial, ""];
 			}
 		}
 	}
@@ -73,18 +84,32 @@ export class VectorObject extends Object3D implements IVectorSegments {
 		this.updateVectors();
 	}
 
+	public get label(): string {
+		return this.aVector.label;
+	}
+	public set label(value: string) {
+		this.aVector.label = value;
+	}
+	public get isLabelVisible(): boolean {
+		return this.aVector.isLabelVisible;
+	}
+	public set isLabelVisible(value: boolean) {
+		this.aVector.isLabelVisible = value;
+	}
+
 	protected readonly xVector: ArrowObject;
 	protected readonly yVector: ArrowObject;
 	protected readonly zVector: ArrowObject;
 	protected readonly aVector: ArrowObject;
 
-	public constructor(vector: Vector3, baseMaterial?: Material);
-	public constructor(x: number, y: number, z: number, baseMaterial?: Material);
-	public constructor(a: Vector3 | number, b?: number | Material, c?: number, d?: Material) {
+	public constructor(vector: Vector3, baseMaterial?: Material, label?: string);
+	public constructor(x: number, y: number, z: number, baseMaterial?: Material, label?: string);
+	public constructor(a: Vector3 | number, b?: number | Material, c?: number | string, d?: Material, e?: string) {
 		super();
 
-		let baseMaterial;
-		[this.vector, baseMaterial] = VectorObject.typeChecker(a, b, c, d);
+		let baseMaterial: Material;
+		let label: string;
+		[this.vector, baseMaterial, label] = VectorObject.typeChecker(a, b, c, d, e);
 
 		this.xVector = new ArrowObject(VectorObject.yHeadMaterial, baseMaterial);
 		this.add(this.xVector);
@@ -96,6 +121,7 @@ export class VectorObject extends Object3D implements IVectorSegments {
 		this.add(this.zVector);
 
 		this.aVector = new ArrowObject(baseMaterial, baseMaterial, 1.25);
+		this.aVector.label = label;
 		this.add(this.aVector);
 
 		this.updateVectors();

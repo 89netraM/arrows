@@ -31,14 +31,14 @@ class TorqueScene extends BaseScene<TorqueProperties> {
 		const z = new ArrowObject(VectorObject.zHeadMaterial, VectorObject.zHeadMaterial, 1.05);
 		this.add(z);
 
-		this.r = new VectorObject(this.props.r, VectorObject.baseMaterial);
+		this.r = new VectorObject(this.props.r, VectorObject.baseMaterial, "r");
 		this.add(this.r);
 
-		this.F = new VectorObject(this.props.F, new MeshToonMaterial({ color: 0x8F45C7 }));
+		this.F = new VectorObject(this.props.F, new MeshToonMaterial({ color: 0x8F45C7 }), "F");
 		this.F.position.set(this.r.x, this.r.y, this.r.z);
 		this.add(this.F);
 
-		this.M = new TorqueObject(this.props.M, new MeshToonMaterial({ color: 0xFFD966 }));
+		this.M = new TorqueObject(this.props.M, new MeshToonMaterial({ color: 0xFFD966 }), "M");
 		this.M.position.set(this.r.position.x, this.r.position.y, this.r.position.z);
 		this.M.x = this.r.y * this.F.z - this.r.z * this.F.y;
 		this.M.y = this.r.z * this.F.x - this.r.x * this.F.z;

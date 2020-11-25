@@ -2,8 +2,9 @@ import { Vector3, Material, Object3D } from "three";
 import { VectorObject } from "./VectorObject";
 import { ArrowObject } from "./ArrowObject";
 import { IVectorSegments } from "./IVectorSegments";
+import { ILabeled } from "./ILabeled";
 
-export class TorqueObject extends Object3D implements IVectorSegments {
+export class TorqueObject extends Object3D implements IVectorSegments, ILabeled {
 	public static get headInArrow(): number {
 		return ArrowObject.arrowRadius / (ArrowObject.headRadius / ArrowObject.headLength);
 	}
@@ -49,16 +50,29 @@ export class TorqueObject extends Object3D implements IVectorSegments {
 		this.updateVectors();
 	}
 
+	public get label(): string {
+		return this.Vector.label;
+	}
+	public set label(value: string) {
+		this.Vector.label = value;
+	}
+	public get isLabelVisible(): boolean {
+		return this.Vector.isLabelVisible;
+	}
+	public set isLabelVisible(value: boolean) {
+		this.Vector.isLabelVisible = value;
+	}
+
 	protected readonly Vector: VectorObject;
 	protected readonly xVector: ArrowObject;
 	protected readonly yVector: ArrowObject;
 	protected readonly zVector: ArrowObject;
 	protected readonly aVector: ArrowObject;
 
-	public constructor(vector: Vector3, baseMaterial?: Material) {
+	public constructor(vector: Vector3, baseMaterial?: Material, label?: string) {
 		super();
 
-		this.Vector = new VectorObject(vector, baseMaterial);
+		this.Vector = new VectorObject(vector, baseMaterial, label);
 		this.add(this.Vector);
 
 		this.xVector = new ArrowObject(VectorObject.yHeadMaterial, baseMaterial);
