@@ -22,6 +22,14 @@ export function VectorInput(props: { vector: Vector3, onChange?: (newVector: Vec
 				length={props.vector.y}
 				onChange={props.onChange != null ? y => props.onChange(props.vector.clone().setY(y)) : null}
 			/>
+			<label>
+				<span>Magnitude</span>:
+				<input
+					type="number"
+					value={prettify(props.vector.length())}
+					readOnly={true}
+				></input>
+			</label>
 		</span>
 	);
 }
@@ -37,17 +45,17 @@ interface VectorDimensionInputState {
 }
 
 const precision = 100;
+function prettify(value: number): string {
+	return (Math.round(value * precision) / precision).toString();
+}
+
 class VectorDimensionInput extends Component<VectorDimensionInputProperties, VectorDimensionInputState> {
 	public constructor(props: VectorDimensionInputProperties) {
 		super(props);
 
 		this.state = {
-			text: this.prettify(this.props.length)
+			text: prettify(this.props.length)
 		};
-	}
-
-	private prettify(value: number): string {
-		return (Math.round(value * precision) / precision).toString();
 	}
 
 	private updateText(newText: string): void {
