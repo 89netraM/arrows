@@ -1,6 +1,7 @@
 import { Object3D, ConeGeometry, Material, Mesh, MeshBasicMaterial, CylinderGeometry } from "three";
 import { SpriteText2D, textAlign } from "three-text2d";
 import { ILabeled } from "./ILabeled";
+import { getThemedColor } from "./themed";
 
 export class ArrowObject extends Object3D implements ILabeled {
 	private static readonly fontSize: number = 80;
@@ -9,10 +10,6 @@ export class ArrowObject extends Object3D implements ILabeled {
 		return window.getComputedStyle(document.body)
 			.getPropertyValue("font")
 			.replace(/\d+px/, ArrowObject.fontSize + "px");
-	}
-	private static getFontColor(): string {
-		return window.getComputedStyle(document.body)
-			.getPropertyValue("--color");
 	}
 
 	//#region Static helpers
@@ -84,7 +81,7 @@ export class ArrowObject extends Object3D implements ILabeled {
 				{
 					align: textAlign.topLeft,
 					font: ArrowObject.getFont(),
-					fillStyle: ArrowObject.getFontColor(),
+					fillStyle: getThemedColor(),
 					antialias: true,
 				}
 			);

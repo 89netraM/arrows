@@ -4,6 +4,7 @@ import { ArrowsProperties, defaultArrowsProperties } from "../ArrowsProperties";
 import { VectorInput } from "../Components/VectorInput";
 import { ArrowObject } from "../Three.js/ArrowObject";
 import { BaseScene } from "../Three.js/BaseScene";
+import { VectorObjectWithLever } from "../Three.js/VectorObjectWithLever";
 import { TorqueObject } from "../Three.js/TorqueObject";
 import { VectorObject } from "../Three.js/VectorObject";
 import { SceneAndSettings, SettingsProperties } from "./SceneAndSettings";
@@ -16,7 +17,7 @@ export interface TorqueProperties extends ArrowsProperties {
 
 class TorqueScene extends BaseScene<TorqueProperties> {
 	private readonly r: VectorObject;
-	private readonly F: VectorObject;
+	private readonly F: VectorObjectWithLever;
 	private readonly M: TorqueObject;
 
 	public constructor(props: TorqueProperties) {
@@ -34,8 +35,8 @@ class TorqueScene extends BaseScene<TorqueProperties> {
 		this.r = new VectorObject(this.props.r, VectorObject.baseMaterial, "r");
 		this.add(this.r);
 
-		this.F = new VectorObject(this.props.F, new MeshToonMaterial({ color: 0x8F45C7 }), "F");
-		this.F.position.set(this.r.x, this.r.y, this.r.z);
+		this.F = new VectorObjectWithLever(new Vector3(0, 0, 0), this.props.F, new MeshToonMaterial({ color: 0x8F45C7 }), "F");
+		this.F.setPosition(this.r.x, this.r.y, this.r.z);
 		this.add(this.F);
 
 		this.M = new TorqueObject(this.props.M, new MeshToonMaterial({ color: 0xFFD966 }), "M");
@@ -60,7 +61,7 @@ class TorqueScene extends BaseScene<TorqueProperties> {
 				this.r.z = newProps.r.z;
 			}
 
-			this.F.position.set(newProps.r.x, newProps.r.y, newProps.r.z);
+			this.F.setPosition(newProps.r.x, newProps.r.y, newProps.r.z);
 		}
 
 		if (!this.props.F.equals(newProps.F)) {

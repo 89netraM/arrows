@@ -42,28 +42,34 @@ export class VectorObject extends Object3D implements IVectorSegments, ILabeled 
 	}
 	//#endregion Static helpers
 
-	private readonly vector: Vector3;
+	protected readonly vector: Vector3;
 
 	public get x(): number {
 		return this.vector.x;
 	}
 	public set x(value: number) {
-		this.vector.x = value;
-		this.updateVectors();
+		if (this.vector.x !== value) {
+			this.vector.x = value;
+			this.updateVectors();
+		}
 	}
 	public get y(): number {
 		return this.vector.y;
 	}
 	public set y(value: number) {
-		this.vector.y = value;
-		this.updateVectors();
+		if (this.vector.y !== value) {
+			this.vector.y = value;
+			this.updateVectors();
+		}
 	}
 	public get z(): number {
 		return this.vector.z;
 	}
 	public set z(value: number) {
-		this.vector.z = value;
-		this.updateVectors();
+		if (this.vector.z !== value) {
+			this.vector.z = value;
+			this.updateVectors();
+		}
 	}
 
 	protected _tails: boolean = false;
@@ -71,8 +77,10 @@ export class VectorObject extends Object3D implements IVectorSegments, ILabeled 
 		return this._tails;
 	}
 	public set tails(value: boolean) {
-		this._tails = value;
-		this.updateVectors();
+		if (this._tails !== value) {
+			this._tails = value;
+			this.updateVectors();
+		}
 	}
 
 	protected _shouldShowSegments: boolean = true;
@@ -80,8 +88,10 @@ export class VectorObject extends Object3D implements IVectorSegments, ILabeled 
 		return this._shouldShowSegments;
 	}
 	public set shouldShowSegments(value: boolean) {
-		this._shouldShowSegments = value;
-		this.updateVectors();
+		if (this._shouldShowSegments !== value) {
+			this._shouldShowSegments = value;
+			this.updateVectors();
+		}
 	}
 
 	public get label(): string {
@@ -104,6 +114,7 @@ export class VectorObject extends Object3D implements IVectorSegments, ILabeled 
 
 	public constructor(vector: Vector3, baseMaterial?: Material, label?: string);
 	public constructor(x: number, y: number, z: number, baseMaterial?: Material, label?: string);
+	public constructor(a: Vector3 | number, b?: number | Material, c?: number | string, d?: Material, e?: string);
 	public constructor(a: Vector3 | number, b?: number | Material, c?: number | string, d?: Material, e?: string) {
 		super();
 
