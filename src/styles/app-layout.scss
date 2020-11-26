@@ -5,6 +5,7 @@ $mainSize: calc(100vw - #{$wideNavSize});
 
 nav {
 	padding: 0px $distance / 2;
+	overflow-y: auto;
 }
 
 main {
