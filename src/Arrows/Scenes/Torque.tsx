@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { Vector3, MeshToonMaterial } from "three";
 import { ArrowsProperties, defaultArrowsProperties } from "../ArrowsProperties";
 import { VectorInput } from "../Components/VectorInput";
@@ -8,7 +8,7 @@ import { VectorObjectWithLever } from "../Three.js/VectorObjectWithLever";
 import { TorqueObject } from "../Three.js/TorqueObject";
 import { VectorObject } from "../Three.js/VectorObject";
 import { SceneAndSettings, SettingsProperties } from "./SceneAndSettings";
-import { prettify } from "../Components/helpers";
+import { NumberInput } from "../Components/NumberInput";
 
 export interface TorqueProperties extends ArrowsProperties {
 	r: Vector3;
@@ -119,17 +119,17 @@ function TorqueSettings(props: SettingsProperties<TorqueProperties>): JSX.Elemen
 				<VectorInput
 					key={JSON.stringify(props.M.toArray())}
 					vector={props.M}
+					readOnly={true}
 				/>
 			</p>
 			<p>
-				<label>
+				<NumberInput
+					key={closestPoint.length()}
+					value={closestPoint.length()}
+					readOnly={true}
+				>
 					<strong>Lever length</strong>:
-					<input
-						type="number"
-						value={prettify(closestPoint.length())}
-						readOnly={true}
-					/>
-				</label>
+				</NumberInput>
 			</p>
 		</>
 	);

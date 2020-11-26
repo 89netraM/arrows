@@ -1,84 +1,44 @@
-import React, { Component, ReactNode } from "react";
+import React from "react";
 import { Vector3 } from "three";
-import { prettify } from "./helpers";
+import { NumberInput } from "./NumberInput";
 
-export function VectorInput(props: { vector: Vector3, onChange?: (newVector: Vector3) => void }): JSX.Element {
+export interface VectorInputProperties {
+	vector: Vector3;
+	readOnly?: boolean;
+	onChange?: (newVector: Vector3) => void;
+}
+
+export function VectorInput(props: VectorInputProperties): JSX.Element {
 	return (
 		<span className="vector">
-			<VectorDimensionInput
-				name="x"
-				color="#ff0000"
-				length={props.vector.z}
+			<NumberInput
+				value={props.vector.z}
 				onChange={props.onChange != null ? z => props.onChange(props.vector.clone().setZ(z)) : null}
-			/>
-			<VectorDimensionInput
-				name="y"
-				color="#00ff00"
-				length={props.vector.x}
+				readOnly={props.readOnly}
+			>
+				<span style={{ color: "#ff0000" }}>x</span>:
+			</NumberInput>
+			<NumberInput
+				value={props.vector.x}
 				onChange={props.onChange != null ? x => props.onChange(props.vector.clone().setX(x)) : null}
-			/>
-			<VectorDimensionInput
-				name="z"
-				color="#0000ff"
-				length={props.vector.y}
+				readOnly={props.readOnly}
+			>
+			<span style={{ color: "#00ff00" }}>y</span>:
+			</NumberInput>
+			<NumberInput
+				value={props.vector.y}
 				onChange={props.onChange != null ? y => props.onChange(props.vector.clone().setY(y)) : null}
-			/>
-			<label>
+				readOnly={props.readOnly}
+			>
+				<span style={{ color: "#0000ff" }}>z</span>:
+			</NumberInput>
+			<NumberInput
+				key={props.vector.length()}
+				value={props.vector.length()}
+				readOnly={true}
+			>
 				<span>Magnitude</span>:
-				<input
-					type="number"
-					value={prettify(props.vector.length())}
-					readOnly={true}
-				></input>
-			</label>
+			</NumberInput>
 		</span>
 	);
-}
-
-interface VectorDimensionInputProperties {
-	name: string;
-	color: string;
-	length: number;
-	onChange?: (newLength: number) => void;
-}
-interface VectorDimensionInputState {
-	text: string;
-}
-
-class VectorDimensionInput extends Component<VectorDimensionInputProperties, VectorDimensionInputState> {
-	public constructor(props: VectorDimensionInputProperties) {
-		super(props);
-
-		this.state = {
-			text: prettify(this.props.length)
-		};
-	}
-
-	private updateText(newText: string): void {
-		const newLength = parseFloat(newText);
-		if (this.props.onChange != null && !isNaN(newLength)) {
-			this.props.onChange(newLength);
-		}
-
-		this.setState({
-			text: newText
-		});
-	}
-
-	public render(): ReactNode {
-		const valid = !isNaN(parseFloat(this.state.text));
-
-		return (
-			<label className={`${!valid ? "error" : ""}`}>
-				<span style={{ color: this.props.color }}>{this.props.name}</span>:
-				<input
-					type="number"
-					step={0.1}
-					value={this.state.text}
-					readOnly={this.props.onChange == null}
-					onChange={e => this.updateText(e.target.value)}
-				></input>
-			</label>
-		);
-	}
 }
