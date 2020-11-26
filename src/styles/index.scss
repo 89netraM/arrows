@@ -44,3 +44,12 @@ main {
 label {
 	display: inline-block;
 }
+
+nav > p > label {
+	max-width: 25ch;
+	width: 100%;
+}
+nav > hr ~ p > label {
+	max-width: unset;
+	width: unset;
+}

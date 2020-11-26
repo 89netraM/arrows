@@ -8,6 +8,7 @@ import { VectorObjectWithLever } from "../Three.js/VectorObjectWithLever";
 import { TorqueObject } from "../Three.js/TorqueObject";
 import { VectorObject } from "../Three.js/VectorObject";
 import { SceneAndSettings, SettingsProperties } from "./SceneAndSettings";
+import { prettify } from "../Components/helpers";
 
 export interface TorqueProperties extends ArrowsProperties {
 	r: Vector3;
@@ -91,6 +92,12 @@ class TorqueScene extends BaseScene<TorqueProperties> {
 }
 
 function TorqueSettings(props: SettingsProperties<TorqueProperties>): JSX.Element {
+	const dir = props.F.clone().normalize();
+	const localTargetPoint = new Vector3(0, 0, 0).sub(props.r);
+	const distance = localTargetPoint.dot(dir);
+	const localClosestPoint = dir.multiplyScalar(distance);
+	const closestPoint = localClosestPoint.clone().add(props.r);
+
 	return (
 		<>
 			<p>
@@ -113,6 +120,16 @@ function TorqueSettings(props: SettingsProperties<TorqueProperties>): JSX.Elemen
 					key={JSON.stringify(props.M.toArray())}
 					vector={props.M}
 				/>
+			</p>
+			<p>
+				<label>
+					<strong>Lever length</strong>:
+					<input
+						type="number"
+						value={prettify(closestPoint.length())}
+						readOnly={true}
+					/>
+				</label>
 			</p>
 		</>
 	);

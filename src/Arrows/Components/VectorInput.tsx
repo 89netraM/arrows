@@ -1,5 +1,6 @@
 import React, { Component, ReactNode } from "react";
 import { Vector3 } from "three";
+import { prettify } from "./helpers";
 
 export function VectorInput(props: { vector: Vector3, onChange?: (newVector: Vector3) => void }): JSX.Element {
 	return (
@@ -42,11 +43,6 @@ interface VectorDimensionInputProperties {
 }
 interface VectorDimensionInputState {
 	text: string;
-}
-
-const precision = 100;
-function prettify(value: number): string {
-	return (Math.round(value * precision) / precision).toString();
 }
 
 class VectorDimensionInput extends Component<VectorDimensionInputProperties, VectorDimensionInputState> {
