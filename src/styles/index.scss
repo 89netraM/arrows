@@ -2,6 +2,8 @@
 
 @import "./app-layout";
 
+$maxWidthInNav: 215px;
+
 main {
 	position: relative;
 
@@ -24,7 +26,7 @@ main {
 	label {
 		display: flex;
 		align-items: baseline;
-		max-width: 25ch;
+		max-width: $maxWidthInNav;
 
 		span {
 			margin-left: 1ch;
@@ -45,11 +47,17 @@ label {
 	display: inline-block;
 }
 
-nav > p > label {
-	max-width: 25ch;
-	width: 100%;
-}
-nav > hr ~ p > label {
-	max-width: unset;
-	width: unset;
+nav {
+	> p > label {
+		max-width: $maxWidthInNav;
+		width: 100%;
+	}
+	> hr ~ p > label {
+		max-width: unset;
+		width: unset;
+	}
+
+	button {
+		max-width: $maxWidthInNav;
+	}
 }

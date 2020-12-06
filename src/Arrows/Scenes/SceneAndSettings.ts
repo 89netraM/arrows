@@ -9,5 +9,6 @@ export interface SceneAndSettings<T extends ArrowsProperties> {
 }
 
 export type SettingsProperties<T extends ArrowsProperties> = T & {
-	onChange: (props: Partial<T>) => void
+	onChange: (props: Partial<T>) => void,
+	onEvent: (name: string, e: any) => void
 };

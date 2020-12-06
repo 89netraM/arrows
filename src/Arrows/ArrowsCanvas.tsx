@@ -1,5 +1,5 @@
 import React, { Component, ReactNode, RefObject } from "react";
-import { Camera, OrthographicCamera, PerspectiveCamera, Renderer, WebGLRenderer } from "three";
+import { Camera, OrthographicCamera, PerspectiveCamera, Renderer, Vector3, WebGLRenderer } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { ArrowsProperties } from "./ArrowsProperties";
 import { BaseScene } from "./Three.js/BaseScene";
@@ -12,6 +12,24 @@ export class ArrowsCanvas extends Component<ArrowsCanvasProperties, {}> {
 	private static readonly orthographicSize: number = 3.25;
 
 	private canvas: RefObject<HTMLCanvasElement> = React.createRef<HTMLCanvasElement>();
+
+	private readonly eventReactions: { [name: string]: (e: any) => void } = {
+		"resetView": _ => {
+			this.perspectiveControls.reset();
+			this.orthographicControls.reset();
+		},
+		"setView": e => {
+			if (e instanceof Vector3) {
+				this.perspectiveControls.target = new Vector3(0, 0, 0);
+				this.perspectiveCamera.position.set(e.x, e.y, e.z);
+				this.orthographicControls.target = new Vector3(0, 0, 0);
+				this.orthographicCamera.position.set(e.x, e.y, e.z);
+			}
+			else {
+				console.error(`Argument to "setView" was not a Vector3!`);
+			}
+		}
+	};
 
 	private animationFrameRequest: number;
 	private renderer: Renderer;
@@ -102,9 +120,10 @@ export class ArrowsCanvas extends Component<ArrowsCanvasProperties, {}> {
 		}
 	}
 
-	public resetView(): void {
-		this.perspectiveControls.reset();
-		this.orthographicControls.reset();
+	public event(name: string, e: any): void {
+		if (name in this.eventReactions) {
+			this.eventReactions[name](e);
+		}
 	}
 
 	public componentWillUnmount(): void {

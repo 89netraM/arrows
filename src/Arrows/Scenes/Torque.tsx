@@ -131,6 +131,11 @@ function TorqueSettings(props: SettingsProperties<TorqueProperties>): JSX.Elemen
 					<strong>Lever length</strong>:
 				</NumberInput>
 			</p>
+			<p>
+				<button onClick={() => props.onEvent("setView", props.M.clone().setLength(props.M.length() + 2))}>
+					Set view normal to moment vector
+				</button>
+			</p>
 		</>
 	);
 }

@@ -63,10 +63,11 @@ export class App<T extends ArrowsProperties> extends Component<AppProperties<T>,
 					<ArrowsSettings
 						sceneSettings={this.state.scene.settings({
 							...this.state.arrowsProps,
-							onChange: this.arrowPropsChange.bind(this)
+							onChange: this.arrowPropsChange.bind(this),
+							onEvent: (n, e) => canvasRef.current?.event(n, e)
 						})}
 						onChange={this.arrowPropsChange.bind(this)}
-						onResetView={() => canvasRef.current?.resetView()}
+						onResetView={() => canvasRef.current?.event("resetView", null)}
 						{...this.state.arrowsProps}
 					/>
 				</nav>
