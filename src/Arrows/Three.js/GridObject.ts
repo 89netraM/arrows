@@ -1,14 +1,17 @@
 import { Object3D, PlaneGeometry, Mesh, MeshBasicMaterial, Renderer, Scene, Camera, Color, Material, Geometry, Group, Vector3 } from "three";
+import { cssColorToThreeJSColor, getThemedColor } from "./themed";
 
 export class GridObject extends Object3D {
-	private static readonly frontColor: Color = new Color(0x000000);
 	private static readonly backColor: Color = new Color(0x885500);
 
+	private readonly frontColor: Color;
 	private readonly material: MeshBasicMaterial;
 
 	public constructor() {
 		super();
-		
+
+		this.frontColor = cssColorToThreeJSColor(getThemedColor());
+
 		const planeGeometry = new PlaneGeometry(4, 4, 4, 4);
 		this.material = new MeshBasicMaterial({ wireframe: true });
 		const plane = new Mesh(planeGeometry, this.material);
@@ -23,7 +26,7 @@ export class GridObject extends Object3D {
 			this.material.color.set(GridObject.backColor);
 		}
 		else {
-			this.material.color.set(GridObject.frontColor);
+			this.material.color.set(this.frontColor);
 		}
 	}
 }
