@@ -33,9 +33,9 @@ export function VectorInput(props: VectorInputProperties): JSX.Element {
 				<span style={{ color: "#0000ff" }}>z</span>:
 			</NumberInput>
 			<NumberInput
-				key={props.vector.length()}
 				value={props.vector.length()}
-				readOnly={true}
+				onChange={props.onChange != null ? l => props.onChange(props.vector.clone().setLength(l)) : null}
+				readOnly={props.readOnly}
 			>
 				<span>Magnitude</span>:
 			</NumberInput>

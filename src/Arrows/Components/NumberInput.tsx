@@ -21,17 +21,26 @@ export class NumberInput extends Component<NumberInputProperties, NumberInputSta
 		};
 	}
 
+	public componentDidUpdate(prevProps: NumberInputProperties): void {
+		if (this.props.value !== prevProps.value && this.props.value !== parseFloat(this.state.text)) {
+			this.setState({
+				text: prettify(this.props.value),
+				isValid: true
+			});
+		}
+	}
+
 	private updateText(newText: string): void {
 		const newValue = parseFloat(newText);
 		let isValid = !isNaN(newValue);
-		if (this.props.onChange != null && isValid) {
-			this.props.onChange(newValue);
-		}
-
 		this.setState({
 			text: newText,
 			isValid
 		});
+
+		if (this.props.onChange != null && isValid) {
+			this.props.onChange(newValue);
+		}
 	}
 
 	public render(): ReactNode {
