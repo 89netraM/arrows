@@ -17,6 +17,10 @@ module.exports = {
 					"css-loader",
 					"sass-loader"
 				]
+			},
+			{
+				test: /\.json$/,
+				loader: "json-loader"
 			}
 		]
 	},
@@ -27,7 +31,7 @@ module.exports = {
 		new HtmlPlugin({
 			template: path.resolve(__dirname, "index.html"),
 			title: "Arrows",
-			base: "./"
+			base: "/arrows/"
 		})
 	],
 	output: {
