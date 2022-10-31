@@ -1,4 +1,5 @@
 FROM node:18-slim AS build
+ENV BASE_URL="/arrows/"
 WORKDIR /app
 COPY ./package.json ./package-lock.json ./
 RUN npm ci

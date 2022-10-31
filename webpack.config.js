@@ -31,7 +31,7 @@ module.exports = {
 		new HtmlPlugin({
 			template: path.resolve(__dirname, "index.html"),
 			title: "Arrows",
-			base: "/arrows/"
+			base: process.env["BASE_URL"] ?? "/",
 		})
 	],
 	output: {
